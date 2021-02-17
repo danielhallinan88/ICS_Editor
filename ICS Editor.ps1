@@ -109,17 +109,12 @@ function Parse-ICS {
 
     $header_regex = "BEGIN[\s\S]*END:VTIMEZONE"
     $header = Select-String -InputObject $ics_contents -AllMatches $header_regex
-    #$header = $header.Matches.Groups[0].ToString()
     New-Variable -Name header_text -Value $($header.Matches.Groups[0].ToString()) -Scope Script -Force
 
     $event_regex = "BEGIN:VEVENT[\s|\S]*?END:VEVENT"
     $events = Select-String -InputObject $ics_contents -AllMatches $event_regex
 
-    #$event = $events.Matches.Value[0]
-
-    #$events_hashes = $events.Matches.Value | foreach { Create-EventHash -event $_ }
     New-Variable -Name events_hashes -Value $($events.Matches.Value | foreach { Create-EventHash -event $_ }) -Scope Script -Force
-    #$footer = "END:VCALENDAR"
     New-Variable -Name footer -Value "END:VCALENDAR" -Scope Script -Force
 
     return $header_text, $events_hashes, $footer
@@ -130,7 +125,7 @@ $browse_button.Add_Click(
         # You can call any function from here to be executed on click.
         $FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ InitialDirectory = [Environment]::GetFolderPath('Desktop') }
         $null = $FileBrowser.ShowDialog()
-        Write-Host $FileBrowser.FileName
+        #Write-Host $FileBrowser.FileName
         $ics_file.Text = $FileBrowser.FileName
         
     }
@@ -143,11 +138,9 @@ $open_button.Add_Click(
 
         [string]$ics_contents = Get-Content -Path $ics_path -Raw
 
-        #Write-Host $ics_contents
         $header, $events, $footer = Parse-ICS -ics_content $ics_content
 
         $titles = $events | foreach { $_.title }
-        #Write-Host $titles
         $event_list.Items.AddRange($titles)
         
     }
@@ -193,7 +186,6 @@ $save_button.Add_Click(
         }
 
         $final_ics += $footer
-        #write-host $final_ics
 
         Out-File -FilePath $output_path -InputObject $final_ics -Encoding ASCII
 
