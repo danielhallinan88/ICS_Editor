@@ -208,9 +208,9 @@ $remove_button.Add_Click(
 
 $save_button.Add_Click(
     {
-        write-host $header_text
-        Write-Host $events_hashes[0].raw_text
-        write-host $footer
+        #write-host $header_text
+        #Write-Host $events_hashes[0].raw_text
+        #write-host $footer
 
         $items_to_write = $event_list.Items
         $items_to_write_hashes = @()
@@ -231,7 +231,6 @@ $save_button.Add_Click(
         $final_ics += $footer
 
         Out-File -FilePath $output_path -InputObject $final_ics -Encoding ASCII
-        #(gc $output_path) | ? {$_.trim() -ne "" } | set-content $output_path
 
     }
 )
